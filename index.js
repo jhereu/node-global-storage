@@ -1,7 +1,7 @@
 /**
  * @namespace GLOBAL-STORAGE MODULE
  * @author Jordi Hereu <https://github.com/jhereu>
- * @description Node module that let's you store data at a global scope.
+ * @description Node module for storing data which can be available between js files.
  * @version 1.0
  */
 
