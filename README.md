@@ -1,4 +1,4 @@
-![node-global-storage](http://jordiher.eu/images/node-global-storage-image1.png)
+![node-global-storage](http://jordiher.eu/images/node-global-storage-image2.png)
 
 
 # Node.js Global Storage
