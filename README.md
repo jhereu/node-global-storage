@@ -1,3 +1,6 @@
+![node-global-storage](http://jordiher.eu/images/node-global-storage-image1.png)
+
+
 # Node.js Global Storage
 
 [![npm version](https://badge.fury.io/js/node-global-storage.svg)](https://badge.fury.io/js/node-global-storage)
