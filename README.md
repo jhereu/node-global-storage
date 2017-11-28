@@ -39,9 +39,7 @@ globals.set('one', 1);
 globals.set('two', false);
 globals.set('three', '33333');
 
-var all = globals.list();
-
-console.log(all);         // => {one: 1, two: false, three: '33333'}
+var all = globals.list();  // => {one: 1, two: false, three: '33333'}
 ```
 
 ### isSet
@@ -66,10 +64,7 @@ globals = require('node-global-storage');
 
 globals.set('OMG', 'Delete me, please!');
 
-var omg = globals.get('OMG');
-console.log(omg);               // => 'Delete me, please!'
-
+var omg = globals.get('OMG'); // => 'Delete me, please!'
 globals.unset('OMG');
-omg = globals.get('OMG');
-console.log(omg);               // => null
+omg = globals.get('OMG');     // => null
 ```
