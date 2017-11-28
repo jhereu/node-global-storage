@@ -3,6 +3,8 @@
 
 # Node.js Global Storage
 
+[![Join the chat at https://gitter.im/node-global-storage/Lobby](https://badges.gitter.im/node-global-storage/Lobby.svg)](https://gitter.im/node-global-storage/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![npm version](https://badge.fury.io/js/node-global-storage.svg)](https://badge.fury.io/js/node-global-storage)
 
 Node module for **global scope variable managing** and storing data making it accessible in multiple Javascript files. Using `node-global-storage`, there is no need to pass arguments forward and backward inside callbacks and lose track of your content through your Node application.
