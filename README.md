@@ -1,6 +1,5 @@
 ![node-global-storage](http://jordiher.eu/images/node-global-storage-image2.png)
 
-
 # Node.js Global Storage
 
 [![npm version](https://badge.fury.io/js/node-global-storage.svg)](https://badge.fury.io/js/node-global-storage) [![Join the chat at https://gitter.im/node-global-storage/Lobby](https://badges.gitter.im/node-global-storage/Lobby.svg)](https://gitter.im/node-global-storage/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -71,3 +70,7 @@ var omg = globals.get('OMG'); // => 'Delete me, please!'
 globals.unset('OMG');
 omg = globals.get('OMG');     // => null
 ```
+
+## License
+
+This repository is licensed under **MIT License**. Check `LICENSE.md` out for more information.
