@@ -1,20 +1,31 @@
 {
     "name": "node-global-storage",
-    "version": "1.0.2",
+    "version": "1.0.7",
     "author": "Jordi Hereu <hello@jordiher.eu> (http://github.com/jhereu)",
     "keywords": [
         "global",
         "variable",
+        "variables",
         "scope",
+        "shared",
         "storage",
         "constant",
         "getter",
         "setter",
         "blueprint"
     ],
-    "author": "jhereu",
     "contributors": [],
     "dependencies": {
         "underscore": "^1.8.3"
-    }
+    },
+    "description": "Global scope variable managing and storing data making it accessible in multiple Javascript files.",
+     "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jhereu/node-global-storage.git"
+    },
+    "bugs": {
+        "url": "https://github.com/jhereu/node-global-storage/issues",
+        "email": "hello@jordiher.eu"
+    },
+    "homepage": "https://github.com/jhereu/node-global-storage/"
 }
