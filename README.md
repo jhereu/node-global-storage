@@ -80,7 +80,7 @@ var hasRespect = globals.isSet('respect');    // => true
 var hasMoney = globals.isSet('money');        // => false
 ```
 
-### Unset
+### Unset / flush
 
 Deletes a variable from the global storage providing the name of it. `flush` has the same effect but with all stored variables.
 
