@@ -29,7 +29,7 @@ Once `globals` is initialized, all API methods are available, even with the prev
 | `.set(key, name)` | `undefined` | Stores data (value) with a given name (key).  | `globals.set('hello', 'Hey there!');` |
 | `.get(key)` | `*`| Returns the value of the provided key name. Supports recursive search. | `globals.get('user.telephones.cell');` |
 | `.list()` | `Object` | Returns the value of the provided key name.  | `globals.list();` |
-| `.unset()` | `undefined` | Deletes the data stored with the given name (key). | `globals.unset('hello');` |
+| `.unset(key)` | `undefined` | Deletes the data stored with the given name (key). | `globals.unset('hello');` |
 | `.isSet(key)` | `boolean` | Checks if a key was stored with some data and returns a predicate.  | `globals.isSet('hello');` |
 | `.flush()` | `undefined` | Deletes all stored data. | `globals.flush();` |
 
