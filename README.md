@@ -12,23 +12,46 @@ Node module for **global scope variable managing** and storing data making it ac
 npm install --save node-global-storage
 ```
 
+## Initialization 
+
+This module has to be loaded inside every Javascript file in which it's going to be used. It will store the same data even if it's required in different parts of your code. Initialization goes as follows:
+```
+var globals = require('node-global-storage');
+```
+Once `globals` is initialized, all API methods are available, even with the previously saved data in another file.
+
 ## API Methods
 
-TODO
+`node-global-storage` has embedded blueprints for saving and retrieving data from the global storage using international keywords such as `get`, `set` or `list`.
 
-## Usage
+| Method | Output | Description | Example |
+| ------------- | ------------- | ------------- | ------------- | 
+| `.set(key, name)` | `undefined` | Stores data (value) with a given name (key).  | `globals.set('hello', 'Hey there!');` |
+| `.get(key)` | `*`| Returns the value of the provided key name. Supports recursive search. | `globals.get('user.telephones.cell');` |
+| `.list()` | `Object` | Returns the value of the provided key name.  | `globals.list();` |
+| `.unset()` | `undefined` | Deletes the data stored with the given name (key). | `globals.unset('hello');` |
+| `.isSet(key)` | `boolean` | Checks if a key was stored with some data and returns a predicate.  | `globals.isSet('hello');` |
+| `.flush()` | `undefined` | Deletes all stored data. | `globals.flush();` |
+
+## Extended usage
 
 ### Get/Set
-
-`node-global-storage` has embedded blueprints for saving and retrieving data from the global storage using the internationally extended methods `.set()` and `.get()`.
 
 ```
 globals = require('node-global-storage');
 
 globals.set('hello', 'Greetings!');
-var hello = globals.get('hello');
+var hello = globals.get('hello'); // => 'Greetings!'
 
-console.log(hello); // => 'Greetings!'
+var user = {
+   telephones: {
+      cell: '+1 123-123-45670',
+      home: '+1 000-111-33333'
+   }
+};
+
+globals.set('user', user);
+var cell = globals.get('user.telephones.cell); // => '+1 123-123-45670'
 ```
 ### List
 
@@ -59,7 +82,7 @@ var hasMoney = globals.isSet('money');        // => false
 
 ### Unset
 
-Deletes a variable from the global storage providing the name of it.
+Deletes a variable from the global storage providing the name of it. `flush` has the same effect but with all stored variables.
 
 ```
 globals = require('node-global-storage');
@@ -68,14 +91,14 @@ globals.set('OMG', 'Delete me, please!');
 
 var omg = globals.get('OMG'); // => 'Delete me, please!'
 globals.unset('OMG');
-omg = globals.get('OMG');     // => null
+omg = globals.get('OMG');     // => undefined
 ```
 
 ## MIT License
 
 Copyright (c) 2017 Jordi Hereu Mayo
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
