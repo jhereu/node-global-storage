@@ -24,14 +24,29 @@ Once `globals` is initialized, all API methods are available, even with the prev
 
 `node-global-storage` has embedded blueprints for saving and retrieving data from the global storage using international keywords such as `get`, `set` or `list`.
 
-| Method | Output | Description | Example |
-| ------------- | ------------- | ------------- | ------------- | 
-| `.set(key, name)` | `undefined` | Stores data (value) with a given name (key).  | `globals.set('hello', 'Hey there!');` |
-| `.get(key)` | `*`| Returns the value of the provided key name. Supports recursive search. | `globals.get('user.telephones.cell');` |
-| `.list()` | `Object` | Returns the value of the provided key name.  | `globals.list();` |
-| `.unset()` | `undefined` | Deletes the data stored with the given name (key). | `globals.unset('hello');` |
-| `.isSet(key)` | `boolean` | Checks if a key was stored with some data and returns a predicate.  | `globals.isSet('hello');` |
-| `.flush()` | `undefined` | Deletes all stored data. | `globals.flush();` |
+| Method | Output | Description |
+| ------------- | ------------- | ------------- |
+| `.default(key, value)` | `undefined` | Override default behavioural option for all transactions without specific options. |
+| `.set(key, value, options)` | `undefined` | Stores data with a given key name.  |
+| `.get(key)` | `*`| Returns the value of the provided key name. |
+| `.list(extend)` | `Object` | Returns all stored data so far. If passed `true`, returns also specific options for the given key  |
+| `.flush(options)` | `undefined` | Deletes all stored data. |
+| `.isSet(key)` | `boolean` | Checks if a key exists. If existed but already deleted, returns `false`. |
+| `.isProtected(key)` | `boolean` | Checks if a key was stored with protection (cannot delete except if `force:true` is specified). |
+| `.unset(key, options)` | `undefined` | Deletes the data stored with the given name (key). |
+
+## Parameters
+
+There are some methods that admit an optional `options` parameter. **This parameter is always an Object**. If a certain parameter is not specified inside the method, then the default behaviour of the module is taken. To change the default behaviour of a parameter, use `globals.default(parameter, value)`.
+
+| Parameter | Default | Description |
+| ------------- | ------------- | ------------- |
+| `verbose` | `false` | Defines whether or not the module should print information through the console. |
+| `protected` | `false` | If a key is protected, it won't be overriden unless `force: true` is specified. |
+| `force` | `false` | If a transaction is forced, it will ignore the `protected` parameter. |
+| `onUpdate` | `undefined` | If a callback function is specified, then it's triggered when the value of a give key changes. The provided function always has two arguments: `function (key, value)`. |
+| `onDelete` | `undefined` | If a callback function is specified, then it's triggered when the given key is deleted. The provided function always has two arguments: `function (key, value)`. |
+| `silent` | `false` | If a transaction is silent, then no callback is triggered (`onUpdate`, `onDelete`). |
 
 ## Extended usage
 
