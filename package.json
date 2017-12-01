@@ -1,6 +1,6 @@
 {
     "name": "node-global-storage",
-    "version": "1.2",
+    "version": "1.2.0",
     "author": "Jordi Hereu <hello@jordiher.eu> (http://github.com/jhereu)",
     "keywords": [
         "global",
