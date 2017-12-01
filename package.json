@@ -1,6 +1,6 @@
 {
     "name": "node-global-storage",
-    "version": "1.0.7",
+    "version": "1.2",
     "author": "Jordi Hereu <hello@jordiher.eu> (http://github.com/jhereu)",
     "keywords": [
         "global",
@@ -12,7 +12,10 @@
         "constant",
         "getter",
         "setter",
-        "blueprint"
+        "blueprint",
+        "backend",
+        "back-end",
+        "back end",
     ],
     "contributors": [],
     "dependencies": {
