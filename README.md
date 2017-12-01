@@ -50,23 +50,20 @@ There are some methods that admit an optional `options` parameter. **This parame
 
 ## Extended usage
 
-### Get/Set
+#### Get/Set
 
 ```
 globals = require('node-global-storage');
 
-globals.set('hello', 'Greetings!');
+globals.set('hello', 'Greetings!', {protected: true});
 var hello = globals.get('hello'); // => 'Greetings!'
 
-var user = {
-   telephones: {
-      cell: '+1 123-123-45670',
-      home: '+1 000-111-33333'
-   }
-};
+globals.set('hello', "What's up, bro!");
+var hello = globals.get('hello'); // => 'Greetings!'
 
-globals.set('user', user);
-var cell = globals.get('user.telephones.cell); // => '+1 123-123-45670'
+globals.set('hello', "You got forced!", {force: true});
+var hello = globals.get('hello'); // => 'You got forced!'
+
 ```
 ### List
 
