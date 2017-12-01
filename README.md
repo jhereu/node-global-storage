@@ -29,7 +29,7 @@ Once `globals` is initialized, all API methods are available, even with the prev
 | `.default(key, value)` | `undefined` | Override default behavioural option for all transactions without specific options. |
 | `.set(key, value, options)` | `undefined` | Stores data with a given key name.  |
 | `.get(key)` | `*`| Returns the value of the provided key name. |
-| `.list(extend)` | `Object` | Returns all stored data so far. If passed `true`, returns also specific options for the given key  |
+| `.list(detailed)` | `Object` | Returns all stored data so far. If passed `true`, returns also specific options for the given key  |
 | `.flush(options)` | `undefined` | Deletes all stored data. |
 | `.isSet(key)` | `boolean` | Checks if a key exists. If existed but already deleted, returns `false`. |
 | `.isProtected(key)` | `boolean` | Checks if a key was stored with protection (cannot delete except if `force:true` is specified). |
@@ -48,62 +48,81 @@ There are some methods that admit an optional `options` parameter. **This parame
 | `onDelete` | `undefined` | If a callback function is specified, then it's triggered when the given key is deleted. The provided function always has two arguments: `function (key, value)`. |
 | `silent` | `false` | If a transaction is silent, then no callback is triggered (`onUpdate`, `onDelete`). |
 
-## Extended usage
+## Examples of use
 
-#### Get/Set
-
+### Get / Set
+Examples of `get` and `set` usage, using `protected`, `force` and the `onUpdate` callback.
 ```
 globals = require('node-global-storage');
 
 globals.set('hello', 'Greetings!', {protected: true});
 var hello = globals.get('hello'); // => 'Greetings!'
 
-globals.set('hello', "What's up, bro!");
+var updateCallback = function (key, value) {
+   console.log("Oh my, '%s' is not '%s' anymoar...", key, value);
+};
+
+globals.set('hello', "What's up, bro!", {onUpdate: updateCallback});
 var hello = globals.get('hello'); // => 'Greetings!'
 
-globals.set('hello', "You got forced!", {force: true});
-var hello = globals.get('hello'); // => 'You got forced!'
+globals.set('hello', "BOOM! It seems like you got FORCED.", {force: true});
+// => "Oh my, 'Greetings!' is not 'What's up, bro!' anymoar..."
 
+var hello = globals.get('hello'); // => 'You got forced!'
 ```
 ### List
-
-You can list all variables currently stored at `node-global-storage` with the method `.list()`.
-
+Examples on how to list stored data with or without details.
 ```
 globals = require('node-global-storage');
 
-globals.set('one', 1);
-globals.set('two', false);
-globals.set('three', '33333');
+globals.set('one', 1, {protected: true});
+globals.set('two', false, {forced: true});
+globals.set('three', '33333', onUpdate: doSomeCrazyThing});
 
-var all = globals.list();  // => {one: 1, two: false, three: '33333'}
+var all = globals.list(); 
+// => {
+//      one: 1,
+//      two: false,
+//      three: '33333'
+//    }
+
+var allWithDetails = globals.list(true);
+// => {
+//      one: {value: 1, protected: true, forced: false, onUpdate: null, onDelete: null},
+//      two: {value: false, protected: false, forced: true, onUpdate: null, onDelete: null},
+//      three: {value: '33333', protected: false, forced: false, onUpdate: doSomeCrazyThing, onDelete: null}
+//    }
 ```
-
-### isSet
-
-Check if a variable is already stored inside your global storage. Returns a predicate.
-
+### isSet / isProtected
+Check if a variable is already stored inside your global storage and is protected.
 ```
 globals = require('node-global-storage');
 
-globals.set('respect', 'Have some, little boy!');
+globals.set('respect', 'Have some, little boy!', {protected: true});
 
-var hasRespect = globals.isSet('respect');    // => true
-var hasMoney = globals.isSet('money');        // => false
+var hasRespect = globals.isSet('respect');              // => true
+var hasMoney = globals.isSet('money');                  // => false
+var protectedRespect = globals.isProtected('respect');  // => true
+var protectedMoney = globals.isProtected('money');      // => false
 ```
 
 ### Unset / flush
-
-Deletes a variable from the global storage providing the name of it. `flush` has the same effect but with all stored variables.
-
+The method `unset` deletes a variable from the global storage providing the name of it. `flush` has the same effect but with all stored variables. 
 ```
 globals = require('node-global-storage');
 
-globals.set('OMG', 'Delete me, please!');
+var deleteCallback = function (key, value) {
+   return console.log('At last I am complete.');
+};
 
-var omg = globals.get('OMG'); // => 'Delete me, please!'
+globals.set('OMG', 'Delete me, please!', {onDelete: deleteCallback});
+globals.set('PLS', 'Not today...', {protected: true});
+
+var omg = globals.get('OMG');   // => 'Delete me, please!'
+// => 'At last I am complete.'
+
 globals.unset('OMG');
-omg = globals.get('OMG');     // => undefined
+omg = globals.get('OMG');       // => undefined
 ```
 
 ## MIT License
