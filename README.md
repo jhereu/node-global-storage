@@ -15,7 +15,7 @@ npm install --save node-global-storage
 ## Initialization 
 
 This module has to be loaded inside every Javascript file in which it's going to be used. It will store the same data even if it's required in different parts of your code. Initialization goes as follows:
-```
+```javascript
 var globals = require('node-global-storage');
 ```
 Once `globals` is initialized, all API methods are available, even with the previously saved data in another file.
@@ -52,7 +52,7 @@ There are some methods that admit an optional `options` parameter. **This parame
 
 ### Get / Set
 Examples of `get` and `set` usage, using `protected`, `force` and the `onUpdate` callback.
-```
+```javascript
 globals = require('node-global-storage');
 
 globals.set('hello', 'Greetings!', {protected: true});
@@ -72,7 +72,7 @@ var hello = globals.get('hello'); // => 'You got forced!'
 ```
 ### List
 Examples on how to list stored data with or without details.
-```
+```javascript
 globals = require('node-global-storage');
 
 globals.set('one', 1, {protected: true});
@@ -95,7 +95,7 @@ var allWithDetails = globals.list(true);
 ```
 ### isSet / isProtected
 Check if a variable is already stored inside your global storage and is protected.
-```
+```javascript
 globals = require('node-global-storage');
 
 globals.set('respect', 'Have some, little boy!', {protected: true});
@@ -108,7 +108,7 @@ var protectedMoney = globals.isProtected('money');      // => false
 
 ### Unset / flush
 The method `unset` deletes a variable from the global storage providing the name of it. `flush` has the same effect but with all stored variables. 
-```
+```javascript
 globals = require('node-global-storage');
 
 var deleteCallback = function (key, value) {
