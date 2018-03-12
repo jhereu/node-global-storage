@@ -9,6 +9,8 @@
 
 Node module for **global scope variable managing** and storing data making it accessible in multiple Javascript files. Using `node-global-storage`, there is no need to pass arguments forward and backward inside callbacks and lose track of your content through your Node application.
 
+![global-variables-meme](http://jordiher.eu/images/global_variables_meme1.jpg)
+
 ## Installation
 
 ```bash
