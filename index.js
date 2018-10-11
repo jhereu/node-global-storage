@@ -157,8 +157,8 @@ exports.unset = function (key, options) {
     var deleteCallback = exists && _.isFunction(DATA[key].onDelete) ? DATA[key].onDelete : OPTIONS.onDelete;
 
     if (exists && (forced || !protected)) {
-        _.omit(DATA, key);
         var value = DATA[key].value;
+        DATA = _.omit(DATA, key);
         OPTIONS.verbose && console.log("node-global-storage :: %s :: Key deleted successfully.", key);
         return _.isFunction(deleteCallback) && !silent ? deleteCallback(key, value) : value;
     }
