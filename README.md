@@ -47,8 +47,8 @@ There are some methods that admit an optional `options` parameter. **This parame
 | Parameter | Default | Description |
 | ------------- | ------------- | ------------- |
 | `verbose` | `false` | Defines whether or not the module should print information through the console. |
-| `protected` | `false` | If a key is protected, it won't be overriden unless `force: true` is specified. |
-| `force` | `false` | If a transaction is forced, it will ignore the `protected` parameter. |
+| `protection` | `false` | If a key is protected, it won't be overriden unless `force: true` is specified. |
+| `force` | `false` | If a transaction is forced, it will ignore the `protection` parameter. |
 | `onUpdate` | `undefined` | If a callback function is specified, then it's triggered when the value of a give key changes. The provided function always has two arguments: `function (key, value)`. |
 | `onDelete` | `undefined` | If a callback function is specified, then it's triggered when the given key is deleted. The provided function always has two arguments: `function (key, value)`. |
 | `silent` | `false` | If a transaction is silent, then no callback is triggered (`onUpdate`, `onDelete`). |
@@ -56,13 +56,13 @@ There are some methods that admit an optional `options` parameter. **This parame
 ## Examples of use
 
 ### Get / Set
-Examples of `get` and `set` usage, using `protected`, `force` and the `onUpdate` callback.
+Examples of `get` and `set` usage, using `protection`, `force` and the `onUpdate` callback.
 ```javascript
 globals = require('node-global-storage');
 
 let hello;
 
-globals.set('hello', 'Greetings!', {protected: true});
+globals.set('hello', 'Greetings!', {protection: true});
 hello = globals.get('hello'); // => 'Greetings!'
 
 const updateCallback = function (key, value) {
@@ -82,7 +82,7 @@ Examples on how to list stored data with or without details.
 ```javascript
 globals = require('node-global-storage');
 
-globals.set('one', 1, {protected: true});
+globals.set('one', 1, {protection: true});
 globals.set('two', false, {forced: true});
 globals.set('three', '33333', onUpdate: doSomeCrazyThing});
 
@@ -95,9 +95,9 @@ const all = globals.list();
 
 const allWithDetails = globals.list(true);
 // => {
-//      one: {value: 1, protected: true, forced: false, onUpdate: null, onDelete: null},
-//      two: {value: false, protected: false, forced: true, onUpdate: null, onDelete: null},
-//      three: {value: '33333', protected: false, forced: false, onUpdate: doSomeCrazyThing, onDelete: null}
+//      one: {value: 1, protection: true, forced: false, onUpdate: null, onDelete: null},
+//      two: {value: false, protection: false, forced: true, onUpdate: null, onDelete: null},
+//      three: {value: '33333', protection: false, forced: false, onUpdate: doSomeCrazyThing, onDelete: null}
 //    }
 ```
 ### isSet / isProtected
@@ -105,7 +105,7 @@ Check if a variable is already stored inside your global storage and is protecte
 ```javascript
 globals = require('node-global-storage');
 
-globals.set('respect', 'Have some, little boy!', {protected: true});
+globals.set('respect', 'Have some, little boy!', {protection: true});
 
 const hasRespect = globals.isSet('respect');              // => true
 const hasMoney = globals.isSet('money');                  // => false
@@ -123,7 +123,7 @@ const deleteCallback = function (key, value) {
 };
 
 globals.set('OMG', 'Delete me, please!', {onDelete: deleteCallback});
-globals.set('PLS', 'Not today...', {protected: true});
+globals.set('PLS', 'Not today...', {protection: true});
 
 let omg = globals.get('OMG');   // => 'Delete me, please!'
 // => 'At last I am complete.'

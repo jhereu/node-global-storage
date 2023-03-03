@@ -7,15 +7,15 @@
  */
 
 /* Dependencies */
-const _ = require('underscore'); /* All-Mighty Underscore! */
+import _ from 'underscore'; /* All-Mighty Underscore! */
 
 /* Where we're going to store all our data */
 let DATA = {};
 
 /* Global default options */
-let OPTIONS = {
+const OPTIONS = {
     verbose: false,
-    protected: false,
+    protection: false,
     force: false,
     silent: false,
     onUpdate: false,
@@ -43,12 +43,12 @@ exports.default = function (key, value) {
  */
 exports.set = function (key, value, options) {
     const exists = _.has(DATA, key);
-    const protected = _.has(DATA[key], 'protected') ? DATA[key].protected : OPTIONS.protected;
+    const protection = _.has(DATA[key], 'protection') ? DATA[key].protection : OPTIONS.protection;
     const forced = _.has(options, 'force') ? options.force : OPTIONS.force;
     const silent = _.has(options, 'silent') ? options.silent : OPTIONS.silent;
     const onUpdate = exists && _.isFunction(DATA[key].onUpdate) ? DATA[key].onUpdate : OPTIONS.onUpdate;
 
-    if (exists && protected && !forced) {
+    if (exists && protection && !forced) {
         OPTIONS.verbose && console.log("node-global-storage :: %s :: Key already exists and it's protected. Try {force: true} next time.", key);
         return;
     }
@@ -100,7 +100,7 @@ exports.flush = function (options) {
     }
     DATA = _.reduce(DATA, function (out, value, key) {
         const deleteCallback = value.onDelete || OPTIONS.onDelete;
-        if (value.protected) {
+        if (value.protection) {
             out[key] = value;
         } else if (_.isFunction(deleteCallback)) {
             deleteCallback(key, value.value);
@@ -133,7 +133,7 @@ exports.isProtected = function (key) {
         return false;
     }
     OPTIONS.verbose && console.log("node-global-storage :: %s :: Key's protection checked successfully.", key);
-    return DATA[key].protected;
+    return DATA[key].protection;
 };
 
 /**
@@ -145,11 +145,11 @@ exports.isProtected = function (key) {
 exports.unset = function (key, options) {
     const exists = _.has(DATA, key);
     const forced = _.has(options, 'force') ? options.force : OPTIONS.force;
-    const protected = _.has(DATA, key) && DATA[key].protected;
+    const protection = _.has(DATA, key) && DATA[key].protection;
     const silent = _.has(options, 'silent') ? options.silent : OPTIONS.silent;
     const deleteCallback = exists && _.isFunction(DATA[key].onDelete) ? DATA[key].onDelete : OPTIONS.onDelete;
 
-    if (exists && (forced || !protected)) {
+    if (exists && (forced || !protection)) {
         const value = DATA[key].value;
         DATA = _.omit(DATA, key);
         OPTIONS.verbose && console.log("node-global-storage :: %s :: Key deleted successfully.", key);
