@@ -3,17 +3,17 @@
  * @url https://www.npmjs.com/package/node-global-storage
  * @author Jordi Hereu <hello@jordiher.eu> (http://github.com/jhereu)
  * @description Global scope variable managing and storing data making it accessible in multiple Javascript files.
- * @version 1.2
+ * @version 1.3
  */
 
 /* Dependencies */
-var _ = require('underscore'); /* All-Mighty Underscore! */
+const _ = require('underscore'); /* All-Mighty Underscore! */
 
 /* Where we're going to store all our data */
-var DATA = {};
+let DATA = {};
 
 /* Global default options */
-var OPTIONS = {
+let OPTIONS = {
     verbose: false,
     protected: false,
     force: false,
@@ -27,12 +27,10 @@ var OPTIONS = {
  * @description Override default behavioural option for all transactions without specific options.
  * @param {String} key
  * @param {Boolean} value
- * @returns {undefined}
  */
 exports.default = function (key, value) {
     OPTIONS[key] = value;
     OPTIONS.verbose && console.log("node-global-storage :: %s :: Global option set successfully.", key);
-    return;
 };
 
 /**
@@ -44,11 +42,11 @@ exports.default = function (key, value) {
  * @returns {String|Integer|Object|Array|Function}
  */
 exports.set = function (key, value, options) {
-    var exists = _.has(DATA, key);
-    var protected = _.has(DATA[key], 'protected') ? DATA[key].protected : OPTIONS.protected;
-    var forced = _.has(options, 'force') ? options.force : OPTIONS.force;
-    var silent = _.has(options, 'silent') ? options.silent : OPTIONS.silent;
-    var onUpdate = exists && _.isFunction(DATA[key].onUpdate) ? DATA[key].onUpdate : OPTIONS.onUpdate;
+    const exists = _.has(DATA, key);
+    const protected = _.has(DATA[key], 'protected') ? DATA[key].protected : OPTIONS.protected;
+    const forced = _.has(options, 'force') ? options.force : OPTIONS.force;
+    const silent = _.has(options, 'silent') ? options.silent : OPTIONS.silent;
+    const onUpdate = exists && _.isFunction(DATA[key].onUpdate) ? DATA[key].onUpdate : OPTIONS.onUpdate;
 
     if (exists && protected && !forced) {
         OPTIONS.verbose && console.log("node-global-storage :: %s :: Key already exists and it's protected. Try {force: true} next time.", key);
@@ -66,8 +64,7 @@ exports.set = function (key, value, options) {
  * @returns {String|Integer|Object|Array|Function|undefined}
  */
 exports.get = function (key) {
-    var exists = _.has(DATA, key);
-    if (!exists) {
+    if (!_.has(DATA, key)) {
         OPTIONS.verbose && console.log("node-global-storage :: %s :: Key doesn't exist.", key);
         return;
     }
@@ -93,17 +90,16 @@ exports.list = function (listProperties) {
  * @name flush
  * @description Deletes all stored data.
  * @param {Object} options - Defines specific options for the transaction.
- * @returns {undefined}
  */
 exports.flush = function (options) {
-    var forced = _.has(options, 'force') ? options.force : OPTIONS.force;
+    const forced = _.has(options, 'force') ? options.force : OPTIONS.force;
     if (forced) {
         DATA = {};
         OPTIONS.verbose && console.log("node-global-storage :: All keys deleted successfully.");
         return;
     }
     DATA = _.reduce(DATA, function (out, value, key) {
-        var deleteCallback = value.onDelete || OPTIONS.onDelete;
+        const deleteCallback = value.onDelete || OPTIONS.onDelete;
         if (value.protected) {
             out[key] = value;
         } else if (_.isFunction(deleteCallback)) {
@@ -112,7 +108,6 @@ exports.flush = function (options) {
         return out;
     }, {});
     OPTIONS.verbose && console.log("node-global-storage :: Non-protected keys deleted successfully.");
-    return;
 };
 
 /**
@@ -133,8 +128,7 @@ exports.isSet = function (key) {
  * @returns {Boolean}
  */
 exports.isProtected = function (key) {
-    var exists = _.has(DATA, key);
-    if (!exists) {
+    if (!_.has(DATA, key)) {
         OPTIONS.verbose && console.log("node-global-storage :: %s :: Key does not exist.", key);
         return false;
     }
@@ -147,21 +141,19 @@ exports.isProtected = function (key) {
  * @description Deletes the data stored with the given name (key).
  * @param {String|Integer} key
  * @param {Object} options - Defines specific options for the transaction.
- * @returns {undefined}
  */
 exports.unset = function (key, options) {
-    var exists = _.has(DATA, key);
-    var forced = _.has(options, 'force') ? options.force : OPTIONS.force;
-    var protected = _.has(DATA, key) && DATA[key].protected;
-    var silent = _.has(options, 'silent') ? options.silent : OPTIONS.silent;
-    var deleteCallback = exists && _.isFunction(DATA[key].onDelete) ? DATA[key].onDelete : OPTIONS.onDelete;
+    const exists = _.has(DATA, key);
+    const forced = _.has(options, 'force') ? options.force : OPTIONS.force;
+    const protected = _.has(DATA, key) && DATA[key].protected;
+    const silent = _.has(options, 'silent') ? options.silent : OPTIONS.silent;
+    const deleteCallback = exists && _.isFunction(DATA[key].onDelete) ? DATA[key].onDelete : OPTIONS.onDelete;
 
     if (exists && (forced || !protected)) {
-        var value = DATA[key].value;
+        const value = DATA[key].value;
         DATA = _.omit(DATA, key);
         OPTIONS.verbose && console.log("node-global-storage :: %s :: Key deleted successfully.", key);
         return _.isFunction(deleteCallback) && !silent ? deleteCallback(key, value) : value;
     }
     OPTIONS.verbose && console.log("node-global-storage :: %s :: Couldn't delete key. Try {force: true} next time.", key);
-    return;
 };

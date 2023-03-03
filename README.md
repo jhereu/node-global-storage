@@ -60,20 +60,22 @@ Examples of `get` and `set` usage, using `protected`, `force` and the `onUpdate`
 ```javascript
 globals = require('node-global-storage');
 
-globals.set('hello', 'Greetings!', {protected: true});
-var hello = globals.get('hello'); // => 'Greetings!'
+let hello;
 
-var updateCallback = function (key, value) {
+globals.set('hello', 'Greetings!', {protected: true});
+hello = globals.get('hello'); // => 'Greetings!'
+
+const updateCallback = function (key, value) {
    console.log("Oh my, '%s' is not '%s' anymoar...", key, value);
 };
 
 globals.set('hello', "What's up, bro!", {onUpdate: updateCallback});
-var hello = globals.get('hello'); // => 'Greetings!'
+hello = globals.get('hello'); // => 'Greetings!'
 
 globals.set('hello', "BOOM! It seems like you got FORCED.", {force: true});
 // => "Oh my, 'Greetings!' is not 'What's up, bro!' anymoar..."
 
-var hello = globals.get('hello'); // => 'You got forced!'
+hello = globals.get('hello'); // => 'You got forced!'
 ```
 ### List
 Examples on how to list stored data with or without details.
@@ -84,14 +86,14 @@ globals.set('one', 1, {protected: true});
 globals.set('two', false, {forced: true});
 globals.set('three', '33333', onUpdate: doSomeCrazyThing});
 
-var all = globals.list(); 
+const all = globals.list(); 
 // => {
 //      one: 1,
 //      two: false,
 //      three: '33333'
 //    }
 
-var allWithDetails = globals.list(true);
+const allWithDetails = globals.list(true);
 // => {
 //      one: {value: 1, protected: true, forced: false, onUpdate: null, onDelete: null},
 //      two: {value: false, protected: false, forced: true, onUpdate: null, onDelete: null},
@@ -105,10 +107,10 @@ globals = require('node-global-storage');
 
 globals.set('respect', 'Have some, little boy!', {protected: true});
 
-var hasRespect = globals.isSet('respect');              // => true
-var hasMoney = globals.isSet('money');                  // => false
-var protectedRespect = globals.isProtected('respect');  // => true
-var protectedMoney = globals.isProtected('money');      // => false
+const hasRespect = globals.isSet('respect');              // => true
+const hasMoney = globals.isSet('money');                  // => false
+const protectedRespect = globals.isProtected('respect');  // => true
+const protectedMoney = globals.isProtected('money');      // => false
 ```
 
 ### Unset / flush
@@ -116,14 +118,14 @@ The method `unset` deletes a variable from the global storage providing the name
 ```javascript
 globals = require('node-global-storage');
 
-var deleteCallback = function (key, value) {
+const deleteCallback = function (key, value) {
    return console.log('At last I am complete.');
 };
 
 globals.set('OMG', 'Delete me, please!', {onDelete: deleteCallback});
 globals.set('PLS', 'Not today...', {protected: true});
 
-var omg = globals.get('OMG');   // => 'Delete me, please!'
+let omg = globals.get('OMG');   // => 'Delete me, please!'
 // => 'At last I am complete.'
 
 globals.unset('OMG');
