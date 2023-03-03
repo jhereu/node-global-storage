@@ -1,6 +1,6 @@
 {
     "name": "node-global-storage",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "author": "Jordi Hereu <hello@jordiher.eu> (http://github.com/jhereu)",
     "keywords": [
         "global",
@@ -17,7 +17,9 @@
         "back-end",
         "back end"
     ],
-    "contributors": [],
+    "contributors": [
+        "Alberto González <contacto@alberto-gonzalez.es> (https://github.com/AlbertoGonzalezProg)"
+    ],
     "dependencies": {
         "underscore": "^1.8.3"
     },
