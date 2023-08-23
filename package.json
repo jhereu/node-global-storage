@@ -1,34 +1,33 @@
 {
-    "name": "node-global-storage",
-    "version": "1.2.0",
-    "author": "Jordi Hereu <hello@jordiher.eu> (http://github.com/jhereu)",
-    "keywords": [
-        "global",
-        "variable",
-        "variables",
-        "scope",
-        "shared",
-        "storage",
-        "constant",
-        "getter",
-        "setter",
-        "blueprint",
-        "backend",
-        "back-end",
-        "back end"
-    ],
-    "contributors": [],
-    "dependencies": {
-        "underscore": "^1.8.3"
-    },
-    "description": "Global scope variable managing and storing data making it accessible in multiple Javascript files.",
-     "repository": {
-        "type": "git",
-        "url": "git+https://github.com/jhereu/node-global-storage.git"
-    },
-    "bugs": {
-        "url": "https://github.com/jhereu/node-global-storage/issues",
-        "email": "hello@jordiher.eu"
-    },
-    "homepage": "https://github.com/jhereu/node-global-storage/"
+  "name": "node-global-storage",
+  "version": "2.0.0",
+  "description": "Global data storage manager for Node.js",
+  "repository": "https://github.com/jhereu/node-global-storage",
+  "author": "Jordi Hereu (@jhereu) <jhereumayo@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.5.1",
+    "prettier": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "ts-node src/storage.test.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "global",
+    "variable",
+    "storage",
+    "config",
+    "configuration",
+    "constant",
+    "getter",
+    "setter"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts"
 }

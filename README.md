@@ -1,140 +1,154 @@
-![node-global-storage](http://jordiher.eu/images/node-global-storage-image2.png)
+# Node.js Global Storage 2
 
-# Node.js Global Storage
+[![npm version](https://badge.fury.io/js/node-global-storage.svg)](https://badge.fury.io/js/node-global-storage)
 
-[![NPM](https://nodei.co/npm/node-global-storage.png)](https://nodei.co/npm/node-global-storage/)
+**Global data storage manager for Node.js**. It generates getters and setters and makes data accessible across multiple Javascript and TypeScript files.
 
-[![npm version](https://badge.fury.io/js/node-global-storage.svg)](https://badge.fury.io/js/node-global-storage) [![Join the chat at https://gitter.im/node-global-storage/Lobby](https://badges.gitter.im/node-global-storage/Lobby.svg)](https://gitter.im/node-global-storage/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+## What's new in 2.x? 🚀
 
+This package was entirely rewritten for a new major release after 6 years. The exposed API is _almost_ the same as 1.x but adapted to modern times and modern Javascript.
 
-Node module for **global scope variable managing** and storing data making it accessible in multiple Javascript files. Using `node-global-storage`, there is no need to pass arguments forward and backward inside callbacks and lose track of your content through your Node application.
-
-![global-variables-meme](http://jordiher.eu/images/global_variables_meme1.jpg)
+- Native TypeScript support! 💙
+- ESModules support (`import` syntax)
+- Zero dependencies! - More lightweight than ever: **23 kB**
+- No need to `require` the module in _every_ single file where it is used
+- Refactored `default(key, value)` to `defaultOption(key, value)`
+- Refactored `list(extended)` to `list(options)`
+- Tests 🤖
 
 ## Installation
 
 ```bash
+# NPM
 npm install --save node-global-storage
+
+# Yarn
+yarn add node-global-storage
 ```
 
-## Initialization 
+## Importation
 
-This module has to be loaded inside every Javascript file in which it's going to be used. It will store the same data even if it's required in different parts of your code. Initialization goes as follows:
-```javascript
-var globals = require('node-global-storage');
+This package can be imported both as Commonjs and ESModules:
+
+```typescript
+// All methods in a single object- The most retrocompatible option
+const globals = require("node-global-storage"); // Commonjs
+import globals from "node-global-storage"; // ESModule
+
+// Only used methods - The most optimal option
+const { get, set } = require("node-global-storage");
+import { get, set } from "node-global-storage";
 ```
-Once `globals` is initialized, all API methods are available, even with the previously saved data in another file.
 
 ## API Methods
 
-`node-global-storage` has embedded blueprints for saving and retrieving data from the global storage using international keywords such as `get`, `set` or `list`.
-
-| Method | Output | Description |
-| ------------- | ------------- | ------------- |
-| `.default(key, value)` | `undefined` | Override default behavioural option for all transactions without specific options. |
-| `.set(key, value, options)` | `undefined` | Stores data with a given key name.  |
-| `.get(key)` | `*`| Returns the value of the provided key name. |
-| `.list(detailed)` | `Object` | Returns all stored data so far. If passed `true`, returns also specific options for the given key  |
-| `.flush(options)` | `undefined` | Deletes all stored data. |
-| `.isSet(key)` | `boolean` | Checks if a key exists. If existed but already deleted, returns `false`. |
-| `.isProtected(key)` | `boolean` | Checks if a key was stored with protection (cannot delete except if `force:true` is specified). |
-| `.unset(key, options)` | `undefined` | Deletes the data stored with the given name (key). |
+| Method                       | Return type    | Description                                                                                                   |
+| ---------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------- |
+| `.defaultOption(key, value)` | `undefined`    | Override default specific options for all transactions.                                                       |
+| `.set(key, value, options)`  | `typeof value` | Stores data with a given key name and returns the stored value.                                               |
+| `.get(key)`                  | `any`          | Returns the value of the provided key name.                                                                   |
+| `.list(options)`             | `Object`       | Returns all stored data so far. If passed `{extended: true}`, returns also specific options for the given key |
+| `.isSet(key)`                | `boolean`      | Checks if a key exists. If existed but already deleted, returns `false`.                                      |
+| `.isProtected(key)`          | `boolean`      | Checks if a key was stored with protection (cannot delete except if `force:true` is specified).               |
+| `.flush(options)`            | `undefined`    | Deletes all stored data.                                                                                      |
+| `.unset(key, options)`       | `undefined`    | Deletes the data stored with the given name (key).                                                            |
 
 ## Parameters
 
-There are some methods that admit an optional `options` parameter. **This parameter is always an Object**. If a certain parameter is not specified inside the method, then the default behaviour of the module is taken. To change the default behaviour of a parameter, use `globals.default(parameter, value)`.
+There are some methods that admit an optional `options` parameter. **This parameter is always an Object**. If a certain parameter is not specified inside the method, then the default behaviour of the module is taken. To change the default behaviour of a parameter, use `default(parameter, value)`.
 
-| Parameter | Default | Description |
-| ------------- | ------------- | ------------- |
-| `verbose` | `false` | Defines whether or not the module should print information through the console. |
-| `protected` | `false` | If a key is protected, it won't be overriden unless `force: true` is specified. |
-| `force` | `false` | If a transaction is forced, it will ignore the `protected` parameter. |
-| `onUpdate` | `undefined` | If a callback function is specified, then it's triggered when the value of a give key changes. The provided function always has two arguments: `function (key, value)`. |
-| `onDelete` | `undefined` | If a callback function is specified, then it's triggered when the given key is deleted. The provided function always has two arguments: `function (key, value)`. |
-| `silent` | `false` | If a transaction is silent, then no callback is triggered (`onUpdate`, `onDelete`). |
+| Parameter   | Default     | Description                                                                                                                                                                        |
+| ----------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `protected` | `false`     | If a key is protected, it won't be overriden unless `force: true` is specified.                                                                                                    |
+| `force`     | `false`     | If a transaction is forced, it will ignore the `protected` parameter.                                                                                                              |
+| `onUpdate`  | `undefined` | If a callback function is specified, then it's triggered when the value of a give key changes. The provided function always has two arguments: `function (key, value, oldValue?)`. |
+| `onDelete`  | `undefined` | If a callback function is specified, then it's triggered when the given key is deleted. The provided function always has two arguments: `function (key, value)`.                   |
+| `silent`    | `false`     | If a transaction is silent, then no callback is triggered (`onUpdate`, `onDelete`).                                                                                                |
 
-## Examples of use
+## Usage Examples
 
 ### Get / Set
-Examples of `get` and `set` usage, using `protected`, `force` and the `onUpdate` callback.
-```javascript
-globals = require('node-global-storage');
 
-globals.set('hello', 'Greetings!', {protected: true});
-var hello = globals.get('hello'); // => 'Greetings!'
+```typescript
+import { get, set } from "node-global-storage";
 
-var updateCallback = function (key, value) {
-   console.log("Oh my, '%s' is not '%s' anymoar...", key, value);
-};
+set("hello", "Greetings!", { protected: true });
+let hello = get("hello"); // => 'Greetings!'
 
-globals.set('hello', "What's up, bro!", {onUpdate: updateCallback});
-var hello = globals.get('hello'); // => 'Greetings!'
+const updateCallback = (key, value) =>
+  console.log(`${key} was updated to ${value}`);
 
-globals.set('hello', "BOOM! It seems like you got FORCED.", {force: true});
-// => "Oh my, 'Greetings!' is not 'What's up, bro!' anymoar..."
+// Protected values cannot be overwritten...
+set("hello", "What's up!", { onUpdate: updateCallback });
+hello = get("hello"); // => "Greetings!"
 
-var hello = globals.get('hello'); // => 'You got forced!'
+// ...unless `force` is set to `true`
+set("hello", "This is a forced value", { force: true });
+// => "This is a forced value"
+
+hello = get("hello"); // => "This is a forced value"
 ```
+
 ### List
-Examples on how to list stored data with or without details.
-```javascript
-globals = require('node-global-storage');
 
-globals.set('one', 1, {protected: true});
-globals.set('two', false, {forced: true});
-globals.set('three', '33333', onUpdate: doSomeCrazyThing});
+⚠️ List with `extended: true` returns the core package object reference. Do not edit it directly if you dont want to break anything.
 
-var all = globals.list(); 
+```TypeScript
+import { list, set } from 'node-global-storage';
+
+set('one', 1, { protected: true });
+set('two', false, { forced: true });
+set('three', '33333', { onUpdate: someCallbackFunction });
+
+const all = list();
 // => {
 //      one: 1,
 //      two: false,
 //      three: '33333'
 //    }
 
-var allWithDetails = globals.list(true);
+var allWithDetails = list({ extended: true });
 // => {
-//      one: {value: 1, protected: true, forced: false, onUpdate: null, onDelete: null},
-//      two: {value: false, protected: false, forced: true, onUpdate: null, onDelete: null},
-//      three: {value: '33333', protected: false, forced: false, onUpdate: doSomeCrazyThing, onDelete: null}
+//      one: {value: 1, protected: true, forced: false, onUpdate: null, onDelete: null, createdAt: Date, updatedAt: Date },
+//      two: {value: false, protected: false, forced: true, onUpdate: null, onDelete: null, createdAt: Date, updatedAt: Date },
+//      three: {value: '33333', protected: false, forced: false, onUpdate: doSomeCrazyThing, onDelete: null, createdAt: Date, updatedAt: Date }
 //    }
 ```
+
 ### isSet / isProtected
-Check if a variable is already stored inside your global storage and is protected.
-```javascript
-globals = require('node-global-storage');
 
-globals.set('respect', 'Have some, little boy!', {protected: true});
+```typescript
+import { isSet, isProtected } from "node-global-storage";
 
-var hasRespect = globals.isSet('respect');              // => true
-var hasMoney = globals.isSet('money');                  // => false
-var protectedRespect = globals.isProtected('respect');  // => true
-var protectedMoney = globals.isProtected('money');      // => false
+set("key1", "This is a protected key", { protected: true });
+
+const isKey1Set = isSet("key1"); // => true
+const isKey2Set = isSet("key2"); // => false
+const isKey1Protected = isProtected("key1"); // => true
+const isKey2Protected = isProtected("key2"); // => false
 ```
 
 ### Unset / flush
-The method `unset` deletes a variable from the global storage providing the name of it. `flush` has the same effect but with all stored variables. 
-```javascript
-globals = require('node-global-storage');
 
-var deleteCallback = function (key, value) {
-   return console.log('At last I am complete.');
-};
+```typescript
+import { set, get, unset, flush } from "node-global-storage";
 
-globals.set('OMG', 'Delete me, please!', {onDelete: deleteCallback});
-globals.set('PLS', 'Not today...', {protected: true});
+const deleteCallback = (key, value) => console.log(`Key ${key} was deleted`);
 
-var omg = globals.get('OMG');   // => 'Delete me, please!'
-// => 'At last I am complete.'
+set("key1", "This is a value");
 
-globals.unset('OMG');
-omg = globals.get('OMG');       // => undefined
+let value = get("key1"); // => "This is a value"
+
+unset("key1");
+
+value = get("key1"); // => undefined
 ```
 
 ## MIT License
 
 Copyright (c) 2017 Jordi Hereu Mayo
 
-Permission is hereby granted, free of charge, to any person obtaining a copy 
+Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
