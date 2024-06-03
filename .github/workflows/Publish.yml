@@ -7,7 +7,7 @@ jobs:
   test:
     uses: ./.github/workflows/Test.yml
 
-  publish:
+  Publish:
     runs-on: ubuntu-latest
     needs: test
     steps:
@@ -34,7 +34,7 @@ jobs:
           script: |
             const { execSync } = require('child_process');
 
-            if(branch !== 'refs/heads/main') {
+            if (process.env.BRANCH !== 'refs/heads/main') {
               core.setOutput('publish', 'false');
               return;
             }
