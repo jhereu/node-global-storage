@@ -33,6 +33,7 @@ jobs:
         with:
           script: |
             const { execSync } = require('child_process');
+            const { readFileSync } = require('fs');
 
             if (process.env.BRANCH !== 'refs/heads/main') {
               core.setOutput('publish', 'false');
