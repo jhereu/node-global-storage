@@ -1,7 +1,9 @@
 # Node Global Storage 💾
 
 ![NPM Version](https://img.shields.io/npm/v/node-global-storage)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/jhereu/node-global-storage/Main.yml)
+[![Test Workflow](https://github.com/jhereu/node-global-storage/actions/workflows/Test.yml/badge.svg)](https://github.com/jhereu/node-global-storage/actions/workflows/Test.yml)
+[![Publish Workflow](https://github.com/jhereu/node-global-storage/actions/workflows/Publish.yml/badge.svg)](https://github.com/jhereu/node-global-storage/actions/workflows/Publish.yml)
+
 
 **Global data storage manager for Node.js**. Make data accessible across your JavaScript and TypeScript files without worrying about multiple imports.
 

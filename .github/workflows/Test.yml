@@ -1,8 +1,9 @@
-name: Test and NPM Publish
+name: Test
 
 on:
   push:
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   test:
@@ -24,6 +25,12 @@ jobs:
 
       - name: Run src tests
         run: yarn test
+
+      - name: Build
+        run: yarn build
+
+      - name: Run dist tests
+        run: yarn test:dist
 
   publish:
     runs-on: ubuntu-latest

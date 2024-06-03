@@ -1,0 +1,63 @@
+name: Publish NPM Package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/Test.yml
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Prepublish
+        id: prepublish
+        uses: actions/github-script@v7
+        env:
+          BRANCH: ${{ github.ref }}
+        with:
+          script: |
+            const { execSync } = require('child_process');
+
+            if(branch !== 'refs/heads/main') {
+              core.setOutput('publish', 'false');
+              return;
+            }
+
+            const { version } = readFileSync('package.json', 'utf8');
+
+            core.setOutput('publish', true);
+            core.setOutput('version', version);
+
+      - name: Publish to NPM
+        run: yarn publish
+        if: ${{ steps.prepublish.outputs.publish == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: ${{ steps.prepublish.outputs.publish == 'true' }}
+        with:
+          files: |
+            dist/*
+            README.md
+            package.json
+          name: ${{ steps.need.outputs.version }}
+          tag_name: "v${{ steps.prepublish.outputs.version }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
