@@ -1,0 +1,11 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "reporters": ["default"],
+  "testPathIgnorePatterns": ["/node_modules/", "/build/"],
+  "detectOpenHandles": true,
+  "collectCoverage": true,
+  "collectCoverageFrom": ["dist-test/**/*.js"],
+  "coverageReporters": ["text", "html"],
+  "verbose": true
+}

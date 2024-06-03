@@ -1,22 +1,22 @@
-# Node.js Global Storage 2
+# Node Global Storage 💾
 
-[![npm version](https://badge.fury.io/js/node-global-storage.svg)](https://badge.fury.io/js/node-global-storage)
+![NPM Version](https://img.shields.io/npm/v/node-global-storage)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/jhereu/node-global-storage/Main.yml)
 
-**Global data storage manager for Node.js**. It generates getters and setters and makes data accessible across multiple Javascript and TypeScript files.
+**Global data storage manager for Node.js**. Make data accessible across your JavaScript and TypeScript files without worrying about multiple imports.
 
-## What's new in 2.x? 🚀
+## What's new in version 3.x? 🚀
 
-This package was entirely rewritten for a new major release after 6 years. The exposed API is _almost_ the same as 1.x but adapted to modern times and modern Javascript.
+This package was rewritten again from scratch. The exposed API is _almost_ the same as 2.x but further improved for clarity and performance.
 
-- Native TypeScript support! 💙
+- Extended TypeScript types 💙
 - ESModules support (`import` syntax)
-- Zero dependencies! - More lightweight than ever: **23 kB**
-- No need to `require` the module in _every_ single file where it is used
-- Refactored `default(key, value)` to `defaultOption(key, value)`
-- Refactored `list(extended)` to `list(options)`
-- Tests 🤖
+- Zero dependencies
+- Full JSDoc documentation for all methods with examples for inline editor docs!
+- More exhaustive testing with 100% coverage!
+- Refactor of some methods from 2.0
 
-## Installation
+## Install
 
 ```bash
 # NPM
@@ -24,90 +24,143 @@ npm install --save node-global-storage
 
 # Yarn
 yarn add node-global-storage
+
+# PNPM
+pnpm add node-global-storage
 ```
 
-## Importation
+## Import
 
-This package can be imported both as Commonjs and ESModules:
+This package can be imported both as CommonJS or ESModule:
 
 ```typescript
-// All methods in a single object- The most retrocompatible option
-const globals = require("node-global-storage"); // Commonjs
-import globals from "node-global-storage"; // ESModule
+// CommonJS
+const { getValue, setValue } = require("node-global-storage");
 
-// Only used methods - The most optimal option
-const { get, set } = require("node-global-storage");
-import { get, set } from "node-global-storage";
+// ESModule with embedded TypeScript types
+import { getValue, setValue } from "node-global-storage";
 ```
 
 ## API Methods
 
-| Method                       | Return type    | Description                                                                                                   |
-| ---------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------- |
-| `.defaultOption(key, value)` | `undefined`    | Override default specific options for all transactions.                                                       |
-| `.set(key, value, options)`  | `typeof value` | Stores data with a given key name and returns the stored value.                                               |
-| `.get(key)`                  | `any`          | Returns the value of the provided key name.                                                                   |
-| `.list(options)`             | `Object`       | Returns all stored data so far. If passed `{extended: true}`, returns also specific options for the given key |
-| `.isSet(key)`                | `boolean`      | Checks if a key exists. If existed but already deleted, returns `false`.                                      |
-| `.isProtected(key)`          | `boolean`      | Checks if a key was stored with protection (cannot delete except if `force:true` is specified).               |
-| `.flush(options)`            | `undefined`    | Deletes all stored data.                                                                                      |
-| `.unset(key, options)`       | `undefined`    | Deletes the data stored with the given name (key).                                                            |
+| Method                                                                  | Return type                      | Description                                              |
+| ----------------------------------------------------------------------- | -------------------------------- | -------------------------------------------------------- |
+| `setValue<T>(key: string, value: T, options?: SetOptions)`              | `T`                              | Sets the value for a given key in the global storage     |
+| `getValue<T>(key: string)`                                              | `T`                              | undefined`                                               | Returns the value for the provided key name                  |
+| `getAllValues()`                                                        | `Record<string, unknown>`        | Returns all stored values                                |
+| `getMetadata<T>(key: string)`                                           | `StorageItem<T>`                 | undefined`                                               | Returns the full StorageItem object of the provided key name |
+| `getAllMetadata()`                                                      | `Record<string, StorageItem<T>>` | Returns all stored metadata                              |
+| `isSet(key: string)`                                                    | `boolean`                        | Checks if a key has been set                             |
+| `isProtected(key: string)`                                              | `boolean`                        | Checks if a key is protected                             |
+| `unsetValue(key: string, options?: UnsetOptions)`                       | `void`                           | Removes the value for a given key in the global storage  |
+| `flush(options?: FlushOptions)`                                         | `void`                           | Removes all stored values                                |
+| `setDefaultOption(key: keyof DefaultOptions, value: DefaultOptions[T])` | `void`                           | Sets the default option for all transactions             |
+| `getDefaultOptions()`                                                   | `DefaultOptions`                 | Returns the default options                              |
+| `resetDefaultOptions()`                                                 | `void`                           | Resets the default options to the initial default values |
 
-## Parameters
+## Interfaces
 
-There are some methods that admit an optional `options` parameter. **This parameter is always an Object**. If a certain parameter is not specified inside the method, then the default behaviour of the module is taken. To change the default behaviour of a parameter, use `default(parameter, value)`.
+### StorageItem<T>
 
-| Parameter   | Default     | Description                                                                                                                                                                        |
-| ----------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `protected` | `false`     | If a key is protected, it won't be overriden unless `force: true` is specified.                                                                                                    |
-| `force`     | `false`     | If a transaction is forced, it will ignore the `protected` parameter.                                                                                                              |
-| `onUpdate`  | `undefined` | If a callback function is specified, then it's triggered when the value of a give key changes. The provided function always has two arguments: `function (key, value, oldValue?)`. |
-| `onDelete`  | `undefined` | If a callback function is specified, then it's triggered when the given key is deleted. The provided function always has two arguments: `function (key, value)`.                   |
-| `silent`    | `false`     | If a transaction is silent, then no callback is triggered (`onUpdate`, `onDelete`).                                                                                                |
+Internal data structure for stored data. It is returned by `getMetadata(key: string)` and `getAllMetadata()`.
+
+| Key         | Type                                                  | Description                                       |
+| ----------- | ----------------------------------------------------- | ------------------------------------------------- |
+| `value`     | `T`                                                   | Stored value                                      |
+| `protected` | `boolean`                                             | Protect the value from being deleted if set again |
+| `createdAt` | `Date`                                                | Date of creation of the key/value pair            |
+| `updatedAt` | `Date`                                                | Date of the last update of the key/value pair     |
+| `onUpdate?` | `<T>(key: string, newValue: T, oldValue?: T) => void` | Callback to execute when the value is updated     |
+| `onDelete?` | `<T>(key: string, value: T) => void`                  | Callback to execute when the value is deleted     |
+
+### DefaultOptions
+
+Default options for all transactions. They can be modified by `setDefaultOption(key: keyofDefaultOptions, value: DefaultOptions[T])`.
+
+| Key                                  | Type                                                  | Description                                                              |
+| ------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------ |
+| `silent`                             | `boolean`                                             | Do not execute the onUpdate or onDelete callback of previous data if set |
+| `force`                              | `boolean`                                             | Force the update of the value even if it is protected                    |
+| `protected`                          | `boolean`                                             | Protect the value from being deleted if set again                        |
+| `onUpdate?: StorageItem["onUpdate"]` | `<T>(key: string, newValue: T, oldValue?: T) => void` | Callback to execute when the value is updated                            |
+| `onDelete?: StorageItem["onDelete"]` | `<T>(key: string, value: T) => void`                  | Callback to execute when the value is deleted                            |
+
+### SetOptions
+
+Available options when calling `setValue<T>(key: string, value: T, options?: SetOptions)`.
+
+| Key         | Type                                                  | Description                                                              |
+| ----------- | ----------------------------------------------------- | ------------------------------------------------------------------------ |
+| `value`     | `T`                                                   | Stored value                                                             |
+| `protected` | `boolean`                                             | Protect the value from being deleted if set again                        |
+| `silent`    | `boolean`                                             | Do not execute the onUpdate or onDelete callback of previous data if set |
+| `force`     | `boolean`                                             | Force the update of the value even if it is protected                    |
+| `onUpdate?` | `<T>(key: string, newValue: T, oldValue?: T) => void` | Callback to execute when the value is updated                            |
+| `onDelete?` | `<T>(key: string, value: T) => void`                  | Callback to execute when the value is deleted                            |
+
+### UnsetOptions
+
+Available options when calling `unsetValue(key: string, options?: UnsetOptions)`.
+
+
+| Key      | Type      | Description                                                              |
+| -------- | --------- | ------------------------------------------------------------------------ |
+| `silent` | `boolean` | Do not execute the onUpdate or onDelete callback of previous data if set |
+
+### FlushOptions
+
+Available options when calling `flush()`.
+
+
+| Key      | Type      | Description                                                              |
+| -------- | --------- | ------------------------------------------------------------------------ |
+| `silent` | `boolean` | Do not execute the onUpdate or onDelete callback of previous data if set |
 
 ## Usage Examples
 
-### Get / Set
+> ⚠️ `getMetadata` and `getAllMetadata` both return the core package object reference. Don't edit it directly if you don't want to break anything!
+
+### Get and set values
 
 ```typescript
-import { get, set } from "node-global-storage";
+import { getValue, setValue, getMetadata } from "node-global-storage";
 
-set("hello", "Greetings!", { protected: true });
-let hello = get("hello"); // => 'Greetings!'
+setValue("hello", "Greetings!", { protected: true });
+let hello = getValue("hello"); // => 'Greetings!'
 
 const updateCallback = (key, value) =>
   console.log(`${key} was updated to ${value}`);
 
 // Protected values cannot be overwritten...
-set("hello", "What's up!", { onUpdate: updateCallback });
-hello = get("hello"); // => "Greetings!"
+setValue("hello", "What's up!", { onUpdate: updateCallback });
+hello = getValue("hello"); // => "Greetings!"
 
-// ...unless `force` is set to `true`
-set("hello", "This is a forced value", { force: true });
+// ...unless `options.force` is set to `true`
+setValue("hello", "This is a forced value", { force: true });
 // => "This is a forced value"
 
-hello = get("hello"); // => "This is a forced value"
+hello = getValue("hello"); // => "This is a forced value"
+
+const metadata = getMetadata("hello"); // { value: "This is a forced value", createdAt: Date, updatedAt: Date, protected: false, onUpdate: updateCallback, onDelete: undefined }
 ```
 
-### List
+### List values and metadata
 
-⚠️ List with `extended: true` returns the core package object reference. Do not edit it directly if you dont want to break anything.
+```typescript
+import { getAllValues, getMetadata, setValue } from 'node-global-storage';
 
-```TypeScript
-import { list, set } from 'node-global-storage';
+setValue('one', 1, { protected: true });
+setValue('two', false, { forced: true });
+setValue('three', '33333', { onUpdate: someCallbackFunction });
 
-set('one', 1, { protected: true });
-set('two', false, { forced: true });
-set('three', '33333', { onUpdate: someCallbackFunction });
-
-const all = list();
+const allValues = getAllValues();
 // => {
 //      one: 1,
 //      two: false,
 //      three: '33333'
 //    }
 
-var allWithDetails = list({ extended: true });
+var allMetadata = getAllMetadata();
 // => {
 //      one: {value: 1, protected: true, forced: false, onUpdate: null, onDelete: null, createdAt: Date, updatedAt: Date },
 //      two: {value: false, protected: false, forced: true, onUpdate: null, onDelete: null, createdAt: Date, updatedAt: Date },
@@ -131,37 +184,15 @@ const isKey2Protected = isProtected("key2"); // => false
 ### Unset / flush
 
 ```typescript
-import { set, get, unset, flush } from "node-global-storage";
+import { setValue, getValue, unsetValue, flush } from "node-global-storage";
 
 const deleteCallback = (key, value) => console.log(`Key ${key} was deleted`);
 
-set("key1", "This is a value");
+setValue("key1", "This is a value");
 
-let value = get("key1"); // => "This is a value"
+let value = getValue("key1"); // => "This is a value"
 
-unset("key1");
+unsetValue("key1");
 
-value = get("key1"); // => undefined
+value = getValue("key1"); // => undefined
 ```
-
-## MIT License
-
-Copyright (c) 2017 Jordi Hereu Mayo
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
