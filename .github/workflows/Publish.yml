@@ -46,7 +46,7 @@ jobs:
             core.setOutput('version', version);
 
       - name: Publish to NPM
-        run: yarn publish
+        run: npm publish
         if: ${{ steps.prepublish.outputs.publish == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
