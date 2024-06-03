@@ -3,7 +3,6 @@ name: Test and NPM Publish
 on:
   push:
   workflow_dispatch:
-  workflow_run:
 
 jobs:
   test:
