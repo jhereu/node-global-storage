@@ -48,7 +48,7 @@ jobs:
         run: yarn test:dist
 
       - name: Get last tag
-        uses: WyriHaximus/github-action-get-previous-tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
         id: get-tag
 
       - name: Need publish
