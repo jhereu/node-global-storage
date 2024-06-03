@@ -2,7 +2,9 @@
   "name": "node-global-storage",
   "version": "3.0.0",
   "description": "Global data storage manager for Node.js",
-  "repository": "https://github.com/jhereu/node-global-storage",
+  "repository": {
+    "url": "git+https://github.com/jhereu/node-global-storage.git"
+  },
   "author": {
     "name": "Jordi Hereu",
     "email": "jhereumayo@gmail.com"

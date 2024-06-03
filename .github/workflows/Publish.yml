@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -46,13 +47,13 @@ jobs:
             core.setOutput('version', version);
 
       - name: Publish to NPM
-        run: npm publish
+        run: npm publish --provenance --public
         if: ${{ steps.prepublish.outputs.publish == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to NPM Dry Run
-        run: npm publish --dry-run
+        run: npm publish --dry-run --provenance
         if: ${{ steps.prepublish.outputs.publish != 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
