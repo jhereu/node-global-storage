@@ -19,6 +19,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: ESLint
+        run: yarn eslint
+
       - name: Run src tests
         run: yarn test
 
@@ -43,25 +46,19 @@ jobs:
       - name: Run dist tests
         run: yarn test:dist
 
-      - name: Get last tag
-        run: |
-          echo "tag=$(git describe --tags --abbrev=0)" >> ${GITHUB_OUTPUT}
-
       - name: Need publish
         uses: actions/github-script@v7
         env:
-          LATEST_TAG: ${{ steps.get-tag.outputs.tag }}
           BRANCH: ${{ github.ref }}
         with:
           script: |
             const { execSync } = require('child_process')
             const { readFileSync } = require('fs');
 
-            const latestTag = process.env.LATEST_TAG;
             const branch = process.env.BRANCH;
 
-            if(!latestTag || !branch || branch !== 'refs/heads/main') {
-              core.setOuput('publish', 'false');
+            if(branch !== 'refs/heads/main') {
+              core.setOutput('publish', 'false');
               return;
             }
 
