@@ -10,6 +10,8 @@ jobs:
   Publish:
     runs-on: ubuntu-latest
     needs: test
+    permissions:
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,13 +49,13 @@ jobs:
             core.setOutput('version', version);
 
       - name: Publish to NPM
-        run: npm publish --provenance --public
+        run: npm publish --provenance --access public
         if: ${{ steps.prepublish.outputs.publish == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to NPM Dry Run
-        run: npm publish --dry-run --provenance
+        run: npm publish --dry-run
         if: ${{ steps.prepublish.outputs.publish != 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
