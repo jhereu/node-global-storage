@@ -22,9 +22,6 @@ jobs:
       - name: Run src tests
         run: yarn test
 
-      - name: Run dist tests
-        run: yarn test:dist
-
   publish:
     runs-on: ubuntu-latest
     needs: test
@@ -47,8 +44,8 @@ jobs:
         run: yarn test:dist
 
       - name: Get last tag
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-        id: get-tag
+        run: |
+          echo "tag=$(git describe --tags --abbrev=0)" >> ${GITHUB_OUTPUT}
 
       - name: Need publish
         uses: actions/github-script@v7
@@ -74,7 +71,7 @@ jobs:
             const { version: latestVersion } = JSON.parse(latestPackageJson);
             const { version: currentVersion } = JSON.parse(currentPackageJson);
 
-            core.setOuput('publish', latestVersion !== currentVersion);
+            core.setOutput('publish', latestVersion !== currentVersion);
             core.setOutput('version', currentVersion);
 
       - name: Publish to NPM
