@@ -51,6 +51,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Publish to NPM Dry Run
+        run: npm publish --dry-run
+        if: ${{ steps.prepublish.outputs.publish != 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         if: ${{ steps.prepublish.outputs.publish == 'true' }}
