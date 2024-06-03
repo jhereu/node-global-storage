@@ -1,0 +1,97 @@
+name: Test and NPM Publish
+
+on:
+  push:
+  workflow_dispatch:
+  workflow_run:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run src tests
+        run: yarn test
+
+      - name: Run dist tests
+        run: yarn test:dist
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Run dist tests
+        run: yarn test:dist
+
+      - name: Get last tag
+        uses: WyriHaximus/github-action-get-previous-tag
+        id: get-tag
+
+      - name: Need publish
+        uses: actions/github-script@v7
+        env:
+          LATEST_TAG: ${{ steps.get-tag.outputs.tag }}
+          BRANCH: ${{ github.ref }}
+        with:
+          script: |
+            const { execSync } = require('child_process')
+            const { readFileSync } = require('fs');
+
+            const latestTag = process.env.LATEST_TAG;
+            const branch = process.env.BRANCH;
+
+            if(!latestTag || !branch || branch !== 'refs/heads/main') {
+              core.setOuput('publish', 'false');
+              return;
+            }
+
+            const latestPackageJson = execSync(`git show ${latestTag}:package.json`).toString('utf8');
+            const currentPackageJson = readFileSync('package.json', 'utf8');
+
+            const { version: latestVersion } = JSON.parse(latestPackageJson);
+            const { version: currentVersion } = JSON.parse(currentPackageJson);
+
+            core.setOuput('publish', latestVersion !== currentVersion);
+            core.setOutput('version', currentVersion);
+
+      - name: Publish to NPM
+        run: yarn publish
+        if: ${{ steps.need-publish.outputs.publish == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: ${{ steps.need-publish.outputs.publish == 'true' }}
+        with:
+          files: |
+            dist/*
+            README.md
+            package.json
+          name: ${{ steps.need-publish.outputs.version }}
+          tag_name: "v${{ steps.need-publish.outputs.version }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
