@@ -59,15 +59,3 @@ jobs:
         if: ${{ steps.prepublish.outputs.publish != 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        if: ${{ steps.prepublish.outputs.publish == 'true' }}
-        with:
-          files: |
-            dist/*
-            README.md
-            package.json
-          name: ${{ steps.need.outputs.version }}
-          tag_name: "v${{ steps.prepublish.outputs.version }}"
-          token: ${{ secrets.GITHUB_TOKEN }}
