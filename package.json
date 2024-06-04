@@ -1,6 +1,6 @@
 {
   "name": "node-global-storage",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Global data storage manager for Node.js",
   "repository": {
     "url": "git+https://github.com/jhereu/node-global-storage.git"

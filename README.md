@@ -45,20 +45,20 @@ import { getValue, setValue } from "node-global-storage";
 
 ## API Methods
 
-| Method                                                                  | Return type                      | Description                                              |
-| ----------------------------------------------------------------------- | -------------------------------- | -------------------------------------------------------- |
-| `setValue<T>(key: string, value: T, options?: SetOptions)`              | `T`                              | Sets the value for a given key in the global storage     |
-| `getValue<T>(key: string)`                                              | `T`                              | undefined`                                               | Returns the value for the provided key name                  |
-| `getAllValues()`                                                        | `Record<string, unknown>`        | Returns all stored values                                |
-| `getMetadata<T>(key: string)`                                           | `StorageItem<T>`                 | undefined`                                               | Returns the full StorageItem object of the provided key name |
-| `getAllMetadata()`                                                      | `Record<string, StorageItem<T>>` | Returns all stored metadata                              |
-| `isSet(key: string)`                                                    | `boolean`                        | Checks if a key has been set                             |
-| `isProtected(key: string)`                                              | `boolean`                        | Checks if a key is protected                             |
-| `unsetValue(key: string, options?: UnsetOptions)`                       | `void`                           | Removes the value for a given key in the global storage  |
-| `flush(options?: FlushOptions)`                                         | `void`                           | Removes all stored values                                |
-| `setDefaultOption(key: keyof DefaultOptions, value: DefaultOptions[T])` | `void`                           | Sets the default option for all transactions             |
-| `getDefaultOptions()`                                                   | `DefaultOptions`                 | Returns the default options                              |
-| `resetDefaultOptions()`                                                 | `void`                           | Resets the default options to the initial default values |
+| Method                                                                  | Return type                      | Description                                                  |
+| ----------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------ |
+| `setValue<T>(key: string, value: T, options?: SetOptions)`              | `T`                              | Sets the value for a given key in the global storage         |
+| `getValue<T>(key: string)`                                              | `T`                              | Returns the value for the given key name                     |
+| `getAllValues()`                                                        | `Record<string, unknown>`        | Returns all stored values                                    |
+| `getMetadata<T>(key: string)`                                           | `StorageItem<T>`                 | Returns the full StorageItem object of the provided key name |
+| `getAllMetadata()`                                                      | `Record<string, StorageItem<T>>` | Returns all stored metadata                                  |
+| `isSet(key: string)`                                                    | `boolean`                        | Checks if a key has been set                                 |
+| `isProtected(key: string)`                                              | `boolean`                        | Checks if a key is protected                                 |
+| `unsetValue(key: string, options?: UnsetOptions)`                       | `void`                           | Removes the value for a given key in the global storage      |
+| `flush(options?: FlushOptions)`                                         | `void`                           | Removes all stored values                                    |
+| `setDefaultOption(key: keyof DefaultOptions, value: DefaultOptions[T])` | `void`                           | Sets the default option for all transactions                 |
+| `getDefaultOptions()`                                                   | `DefaultOptions`                 | Returns the default options                                  |
+| `resetDefaultOptions()`                                                 | `void`                           | Resets the default options to the initial default values     |
 
 ## Interfaces
 

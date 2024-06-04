@@ -159,7 +159,7 @@ function getStorageItem<T = unknown>(key: string) {
 
 /**
  * @name getValue
- * @description Returns the value for the provided key name
+ * @description Returns the value for the given key name
  * @param {string} key - Key name to store the data to
  * @param {GetOptions} options - Options for the transaction
  * @return {T} - Stored value
@@ -193,7 +193,7 @@ export function getValue<T = unknown>(key: string) {
  * ```
  */
 export function getMetadata<T = unknown>(
-  key: string
+  key: string,
 ): StorageItem<T> | undefined {
   return getStorageItem<T>(key);
 }
@@ -218,7 +218,7 @@ export function getMetadata<T = unknown>(
 export function setValue<T = unknown>(
   key: string,
   value: T,
-  options?: SetOptions
+  options?: SetOptions,
 ) {
   const item = getStorageItem<T>(key) || ({} as StorageItem<T>);
   const force = options?.force ?? defaultOptions.force;
@@ -266,7 +266,7 @@ export function setValue<T = unknown>(
 export function getAllValues() {
   return Array.from(datastore).reduce(
     (memo, [key, storageItem]) => ({ ...memo, [key]: storageItem.value }),
-    {} as Record<string, unknown>
+    {} as Record<string, unknown>,
   );
 }
 
@@ -290,7 +290,7 @@ export function getAllValues() {
 export function getAllMetadata() {
   return Array.from(datastore).reduce(
     (memo, [key, storageItem]) => ({ ...memo, [key]: storageItem }),
-    {} as Record<string, StorageItem>
+    {} as Record<string, StorageItem>,
   );
 }
 
@@ -428,7 +428,7 @@ export function isProtected(key: string) {
  */
 export function setDefaultOption<T extends keyof DefaultOptions>(
   key: T,
-  value: DefaultOptions[T]
+  value: DefaultOptions[T],
 ) {
   defaultOptions[key] = value;
 }
