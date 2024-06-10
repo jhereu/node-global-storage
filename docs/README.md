@@ -20,45 +20,57 @@ This package was rewritten again from scratch. The exposed API is _almost_ the s
 
 ## Install
 
+<!-- tabs:start -->
+#### **NPM**
 ```bash
-# NPM
 npm install --save node-global-storage
+```
 
-# Yarn
+#### **Yarn**
+```bash
 yarn add node-global-storage
+```
 
-# PNPM
+#### **PNPM**
+```bash
 pnpm add node-global-storage
 ```
+<!-- tabs:end -->
 
 ## Import
 
 This package can be imported both as CommonJS or ESModule:
 
+<!-- tabs:start -->
+#### **ESModule (Import)**
 ```typescript
-// CommonJS
-const { getValue, setValue } = require("node-global-storage");
-
-// ESModule with embedded TypeScript types
 import { getValue, setValue } from "node-global-storage";
 ```
 
+#### **CommonJS (require)**
+```typescript
+const { getValue, setValue } = require("node-global-storage");
+```
+
+<!-- tabs:end -->
+
+
 ## API Methods
 
-| Method                                                                  | Return type                      | Description                                                  |
-| ----------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------ |
-| `setValue<T>(key: string, value: T, options?: SetOptions)`              | `T`                              | Sets the value for a given key in the global storage         |
-| `getValue<T>(key: string)`                                              | `T`                              | Returns the value for the given key name                     |
-| `getAllValues()`                                                        | `Record<string, unknown>`        | Returns all stored values                                    |
-| `getMetadata<T>(key: string)`                                           | `StorageItem<T>`                 | Returns the full StorageItem object of the provided key name |
-| `getAllMetadata()`                                                      | `Record<string, StorageItem<T>>` | Returns all stored metadata                                  |
-| `isSet(key: string)`                                                    | `boolean`                        | Checks if a key has been set                                 |
-| `isProtected(key: string)`                                              | `boolean`                        | Checks if a key is protected                                 |
-| `unsetValue(key: string, options?: UnsetOptions)`                       | `void`                           | Removes the value for a given key in the global storage      |
-| `flush(options?: FlushOptions)`                                         | `void`                           | Removes all stored values                                    |
-| `setDefaultOption(key: keyof DefaultOptions, value: DefaultOptions[T])` | `void`                           | Sets the default option for all transactions                 |
-| `getDefaultOptions()`                                                   | `DefaultOptions`                 | Returns the default options                                  |
-| `resetDefaultOptions()`                                                 | `void`                           | Resets the default options to the initial default values     |
+| Method                                                                                         | Options type                           | Return type                            | Description                                                  |
+| ---------------------------------------------------------------------------------------------- | -------------------------------------- | -------------------------------------- | ------------------------------------------------------------ |
+| [`setValue<T>(key: string, value: T, options?: SetOptions)`](?id=get-and-set-values)           | [`SetOptions`](?id=setoptions)         | `T`                                    | Sets the value for a given key in the global storage         |
+| [`getValue<T>(key: string)`](?id=get-and-set-values)                                           |                                        | `T`                                    | Returns the value for the given key name                     |
+| [`getAllValues()`](?id=list-values-and-metadata)                                               |                                        | `Record<string, unknown>`              | Returns all stored values                                    |
+| [`getMetadata<T>(key: string)`](?id=get-and-set-values)                                        |                                        | [`StorageItem<T>`](?id=storageitem)    | Returns the full StorageItem object of the provided key name |
+| [`getAllMetadata()`](?id=list-values-and-metadata)                                             |                                        | `Record<string, StorageItem<T>>`       | Returns all stored metadata                                  |
+| [`isSet(key: string)`](?id=isset-isprotected)                                                  |                                        | `boolean`                              | Checks if a key has been set                                 |
+| [`isProtected(key: string)`](?id=isset-isprotected)                                            |                                        | `boolean`                              | Checks if a key is protected                                 |
+| [`unsetValue(key: string, options?: UnsetOptions)`](?id=unset-flush)                           | [`UnsetOptions`](?id=unsetoptions)     | `void`                                 | Removes the value for a given key in the global storage      |
+| [`flush(options?: FlushOptions)`](?id=unset-flush)                                             | [`FlushOptions`](?id=flushoptions)     | `void`                                 | Removes all stored values                                    |
+| [`setDefaultOption(key: keyof DefaultOptions, value: DefaultOptions[T])`](?id=default-options) | [`DefaultOptions`](?id=defaultoptions) | `void`                                 | Sets the default option for all transactions                 |
+| [`getDefaultOptions()`](?id=default-options)                                                   |                                        | [`DefaultOptions`](?id=defaultoptions) | Returns the default options                                  |
+| [`resetDefaultOptions()`](?id=default-options)                                                 |                                        | `void`                                 | Resets the default options to the initial default values     |
 
 ## Interfaces
 
@@ -230,3 +242,4 @@ resetDefaultOptions();
 
 getDefaultOptions(); // { protected: false, force: false, onUpdate: undefined, onDelete: undefined, silent: false }
 ```
+
