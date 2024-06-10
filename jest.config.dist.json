@@ -6,6 +6,6 @@
   "detectOpenHandles": true,
   "collectCoverage": true,
   "collectCoverageFrom": ["dist-test/**/*.js"],
-  "coverageReporters": ["text", "html"],
+  "coverageReporters": ["text", "clover"],
   "verbose": true
 }
